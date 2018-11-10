@@ -137,15 +137,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = UnauthorizedException.class)
-    public ErrorMessage handleUnauthorizedExceptionException(UnauthorizedException ex) {
-        logger.error(ex.getMessage(),ex);
-        String errorCode =  this.appNo + "B" +"-401";
-        return new ErrorMessage(errorCode, "权限不足");
-    }
-
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(value = AuthenticationException.class)
-    public ErrorMessage handleAuthenticationExceptionException(AuthenticationException ex) {
+    public ErrorMessage handleUnauthorizedException(UnauthorizedException ex) {
         logger.error(ex.getMessage(),ex);
         String errorCode =  this.appNo + "B" +"-401";
         return new ErrorMessage(errorCode, "权限不足");
