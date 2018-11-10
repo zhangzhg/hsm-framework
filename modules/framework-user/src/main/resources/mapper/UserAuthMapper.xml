@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向DAO接口 -->
+<mapper namespace="com.framework.user.mapper.UserMapper">
+    <select id="find" resultType="com.framework.user.model.SysUserEntity">
+        select t.id,t.account,t.password,t.name from sys_user t
+        where t.account=#{account} and t.status='1'
+    </select>
+
+    <select id="findId" parameterType="java.util.Map"  resultType="String">
+        select t.id from sys_user t
+        where t.account=#{account} and t.status='1'
+    </select>
+</mapper>
