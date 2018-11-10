@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace必须指向DAO接口 -->
 <mapper namespace="com.framework.user.mapper.RoleMenuMapper">
-    <select id="queryMenuByRoleIds" parameterType="java.util.List" resultType="com.framework.user.model.SysRoleEntity">
-      select * from sys_menu m
+    <select id="queryMenuByRoleIds" parameterType="java.util.List" resultType="com.framework.user.model.SysMenuEntity">
+      select m.* from sys_menu m
       join sys_menu_role r on m.id = r.menu_id
       where r.role_id in
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">

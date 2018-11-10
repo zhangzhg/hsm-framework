@@ -4,7 +4,7 @@
 <!-- namespace必须指向DAO接口 -->
 <mapper namespace="com.framework.user.mapper.RoleMapper">
     <select id="findByUserId" parameterType="String" resultType="com.framework.user.model.SysRoleEntity">
-        select t.id from sys_role t
+        select t.* from sys_role t
         join sys_user_role r on t.id = r.role_id
         where r.user_id = #{userId}
     </select>

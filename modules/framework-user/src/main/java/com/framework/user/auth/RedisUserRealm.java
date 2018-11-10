@@ -49,10 +49,10 @@ public class RedisUserRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //1.角色
         List<SysRoleEntity> roleList = sysRoleService.queryRoleByUserId(userInfo.getId());
-        List<String> roleIds = getRoleCodeList(roleList);
-        info.addRoles(roleIds);
-        if(!ObjectUtils.isEmpty(roleIds)){
-            List<SysMenuEntity> permissionList = sysMenuService.queryMenuByRoleIds(roleIds);
+        List<String> roleCodes = getRoleCodeList(roleList);
+        info.addRoles(roleCodes);
+        if(!ObjectUtils.isEmpty(roleCodes)){
+            List<SysMenuEntity> permissionList = sysMenuService.queryMenu(roleList);
             List<String> permissions = getPermissionList(permissionList);
             info.addStringPermissions(permissions);
         }
