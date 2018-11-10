@@ -22,7 +22,7 @@ public class RedisCache<K, V> implements Cache<K, V> {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public RedisCache(final String name, final RedisTemplate redisTemplate) {
-        this.cacheKey = PREFIX.concat(name).concat(":");
+        this.cacheKey = PREFIX.concat(name);
         this.redisTemplate = redisTemplate;
     }
 

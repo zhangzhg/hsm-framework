@@ -1,5 +1,6 @@
 package com.framework.web.config;
 
+import com.alibaba.fastjson.serializer.ObjectSerializer;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -41,6 +43,7 @@ import java.lang.reflect.Method;
 @Configuration
 @EnableRedisHttpSession
 @EnableCaching
+@Order(2)
 public class RedisSessionConfig {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RedisSessionConfig.class);

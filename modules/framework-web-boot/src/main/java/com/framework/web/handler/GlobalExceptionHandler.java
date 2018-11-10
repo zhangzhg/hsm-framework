@@ -8,6 +8,7 @@ import com.framework.core.exception.*;
 import com.framework.core.util.ExceptionUtils;
 import com.framework.core.util.I18nUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -132,6 +133,14 @@ public class GlobalExceptionHandler {
     public ErrorMessage handleSessionTimeoutSystemException(SessionTimeoutException ex) {
         logger.error(ex.getMessage(),ex);
         return new ErrorMessage(ex.getMsg());
+    }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value = UnauthorizedException.class)
+    public ErrorMessage handleUnauthorizedExceptionException(SessionTimeoutException ex) {
+        logger.error(ex.getMessage(),ex);
+        String errorCode =  this.appNo + "B" +"-401";
+        return new ErrorMessage(errorCode, "权限不足");
     }
 
     /**

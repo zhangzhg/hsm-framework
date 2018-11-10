@@ -13,8 +13,11 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.cache.RedisCacheManager;
 
+import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,15 +27,19 @@ import java.util.Map;
  * 手机app没有权限验证，不知道这个是否合理？
  */
 @Configuration
+@Order(3)
 public class ShiroConfig {
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
     /****
      * 自定义Real
      */
     @Bean
-    public RedisUserRealm jdbcShiroRealm() {
+    public RedisUserRealm shiroRealm() {
         RedisUserRealm realm = new RedisUserRealm();
         // 根据情况使用缓存器
-        realm.setCacheManager(new ShiroRedisCacheManager());
+        realm.setCacheManager(new ShiroRedisCacheManager(redisTemplate));
         return realm;
     }
 
@@ -45,13 +52,13 @@ public class ShiroConfig {
     public SecurityManager defaultWebSecurityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 配置
-        securityManager.setRealm(jdbcShiroRealm());
+        securityManager.setRealm(shiroRealm());
         // 注意这里必须配置securityManager
         SecurityUtils.setSecurityManager(securityManager);
         //设置session可以交给redis，也可以存本地， 无关。如果配置的话，将会实现session共享（类似单点登录）。
         //securityManager.setSessionManager();
         // 根据情况选择缓存器
-        securityManager.setCacheManager(new ShiroRedisCacheManager());//shiroEhCacheManager()
+        securityManager.setCacheManager(new ShiroRedisCacheManager(redisTemplate));//shiroEhCacheManager()
 
         return securityManager;
     }
@@ -59,13 +66,15 @@ public class ShiroConfig {
 
 
     private class ShiroRedisCacheManager implements CacheManager {
-        @Autowired
-        private RedisTemplate<String, Object> redisTemplate;
+        RedisTemplate template;
+
+        public ShiroRedisCacheManager(RedisTemplate template) {
+            this.template = template;
+        }
 
         @Override
         public <K, V> org.apache.shiro.cache.Cache<K, V> getCache(String name) throws CacheException {
-            //redisTemplate.boundValueOps(key).expire(globExpire, TimeUnit.MINUTES);
-            return new RedisCache<>(name, redisTemplate);
+            return new RedisCache<>(name, template);
         }
     }
 
