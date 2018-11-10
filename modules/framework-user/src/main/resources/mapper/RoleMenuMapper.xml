@@ -7,7 +7,7 @@
       select m.* from sys_menu m
       join sys_menu_role r on m.id = r.menu_id
       where
-        m.type = 'menu' and
+        m.type = 'oper' and
         r.role_id in
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
             #{item}
