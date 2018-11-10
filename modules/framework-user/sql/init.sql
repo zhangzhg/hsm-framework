@@ -3,7 +3,10 @@ CREATE TABLE sys_user (
 	account varchar(50) not null,
 	password varchar(50) not null,
 	name varchar(100) not null,
-	status varchar(1) not null
+	status varchar(1) not null,
+	wechatNo varchar(100) null,
+	qq varchar(20) null,
+	phone varchar(15) null
 );
 
 CREATE TABLE sys_role (

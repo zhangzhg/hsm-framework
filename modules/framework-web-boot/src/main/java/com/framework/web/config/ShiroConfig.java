@@ -1,13 +1,15 @@
 package com.framework.web.config;
 
-import com.framework.user.model.RedisCache;
 import com.framework.user.auth.RedisUserRealm;
+import com.framework.user.model.RedisCache;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -74,7 +76,7 @@ public class ShiroConfig {
         filterFactoryBean.setSecurityManager(defaultWebSecurityManager());
 
         //在app下不要这个东西，后续需要兼容，要改变一下
-        filterFactoryBean.setLoginUrl("/login/input");
+        filterFactoryBean.setLoginUrl("/");
         filterFactoryBean.setSuccessUrl("/index/home");
 
         //设置url全部需要验证才能登陆
@@ -86,5 +88,19 @@ public class ShiroConfig {
         filterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return filterFactoryBean;
+    }
+
+    @Bean
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
+    }
+
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        return authorizationAttributeSourceAdvisor;
     }
 }
