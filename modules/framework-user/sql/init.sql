@@ -22,7 +22,7 @@ CREATE TABLE sys_role (
 CREATE TABLE sys_menu (
 	id varchar(32) not null PRIMARY KEY,
 	parent_id varchar(32) not null,
-	type varchar(10) not null,
+	type varchar(10) not null,--menu or oper
 	code varchar(50) null,
 	name varchar(100) null,
   url varchar(200) null,

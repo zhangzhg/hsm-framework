@@ -6,7 +6,9 @@
     <select id="queryMenuByRoleIds" parameterType="java.util.List" resultType="com.framework.user.model.SysMenuEntity">
       select m.* from sys_menu m
       join sys_menu_role r on m.id = r.menu_id
-      where r.role_id in
+      where
+        m.type = 'menu' and
+        r.role_id in
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>

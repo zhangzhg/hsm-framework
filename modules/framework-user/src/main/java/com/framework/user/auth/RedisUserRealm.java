@@ -54,6 +54,7 @@ public class RedisUserRealm extends AuthorizingRealm {
         if(!ObjectUtils.isEmpty(roleCodes)){
             List<SysMenuEntity> permissionList = sysMenuService.queryMenu(roleList);
             List<String> permissions = getPermissionList(permissionList);
+            //设置操作权限
             info.addStringPermissions(permissions);
         }
         return info;
