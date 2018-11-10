@@ -1,10 +1,12 @@
 package com.framework.user.auth;
 
 import com.framework.user.constant.DicDataEnum;
+import com.framework.user.model.SysMenuEntity;
 import com.framework.user.model.SysRoleEntity;
 import com.framework.user.model.SysUserEntity;
-import com.framework.user.service.SysRoleService;
-import com.framework.user.service.SysUserService;
+import com.framework.user.service.ISysMenuService;
+import com.framework.user.service.ISysRoleService;
+import com.framework.user.service.ISysUserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -15,6 +17,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +27,13 @@ public class RedisUserRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(RedisUserRealm.class);
 
     @Autowired
-    SysUserService sysUserService;
+    ISysUserService sysUserService;
 
     @Autowired
-    SysRoleService sysRoleService;
+    ISysRoleService sysRoleService;
+
+    @Autowired
+    ISysMenuService sysMenuService;
 
     public RedisUserRealm() {
         super();
@@ -43,8 +49,22 @@ public class RedisUserRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //1.角色
         List<SysRoleEntity> roleList = sysRoleService.queryRoleByUserId(userInfo.getId());
-        info.addRoles(getRoleCodeList(roleList));
+        List<String> roleIds = getRoleCodeList(roleList);
+        info.addRoles(roleIds);
+        if(!ObjectUtils.isEmpty(roleIds)){
+            List<SysMenuEntity> permissionList = sysMenuService.queryMenuByRoleIds(roleIds);
+            List<String> permissions = getPermissionList(permissionList);
+            info.addStringPermissions(permissions);
+        }
         return info;
+    }
+
+    private List<String> getPermissionList( List<SysMenuEntity> permissionList){
+        List<String> menus = new ArrayList<String>();
+        if(permissionList != null && permissionList.size() > 0){
+            menus.addAll(permissionList.stream().map(SysMenuEntity::getCode).collect(Collectors.toList()));
+        }
+        return menus;
     }
 
     private List<String> getRoleCodeList( List<SysRoleEntity> roleList){

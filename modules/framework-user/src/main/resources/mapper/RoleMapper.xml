@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向DAO接口 -->
+<mapper namespace="com.framework.user.mapper.RoleMapper">
+    <select id="findByUserId" parameterType="String" resultType="com.framework.user.model.SysRoleEntity">
+        select t.id from sys_role t
+        join sys_user_role r on t.id = r.role_id
+        where r.user_id = #{userId}
+    </select>
+</mapper>
