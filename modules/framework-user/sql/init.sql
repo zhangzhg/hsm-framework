@@ -4,7 +4,7 @@ CREATE TABLE sys_user (
 	password varchar(50) not null,
 	name varchar(100) not null,
 	status varchar(1) not null,
-	wechatNo varchar(100) null,
+	wechat_no varchar(100) null,
 	qq varchar(20) null,
 	phone varchar(15) null
 );
@@ -21,8 +21,8 @@ CREATE TABLE sys_role (
 
 CREATE TABLE sys_menu (
 	id varchar(32) not null PRIMARY KEY,
-	parentId varchar(32) not null,
-	tpye varchar(10) not null,
+	parent_id varchar(32) not null,
+	type varchar(10) not null,
 	code varchar(50) null,
 	name varchar(100) null,
   url varchar(200) null,
