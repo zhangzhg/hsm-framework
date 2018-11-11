@@ -2,6 +2,7 @@ CREATE TABLE sys_user (
 	id varchar(32) not null  PRIMARY KEY,
 	account varchar(50) not null,
 	password varchar(50) not null,
+	token varchar(32) null,
 	name varchar(100) not null,
 	status varchar(1) not null,
 	wechat_no varchar(100) null,

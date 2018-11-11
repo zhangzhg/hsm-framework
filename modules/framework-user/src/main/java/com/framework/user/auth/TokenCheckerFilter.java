@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 如果不使用shiro。 这个方法不会执行
+ * 没用了
  * 判断session 是否过期
  */
 public class TokenCheckerFilter extends AccessControlFilter {
@@ -28,10 +28,6 @@ public class TokenCheckerFilter extends AccessControlFilter {
     public TokenCheckerFilter() {
     }
 
-    /**
-     * 如果用分布式部署的时候，并且启用shiro的时候， 这个方法要改造
-     * httpServletRequest 有可能是取不到的
-     */
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         if(httpServletRequest.getSession() != null && httpServletRequest.getSession().getAttribute("user") != null) {
