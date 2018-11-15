@@ -51,8 +51,10 @@ public class ResultData {
      */
     public static final String TOTAL = "total";
 
-    public ResultData(){
+    private static final String SUCCESS = "success";
 
+    public ResultData(){
+        this.put(SUCCESS, true);
     }
 
     public ResultData(Class clazz, Object object) {
@@ -244,5 +246,9 @@ public class ResultData {
         return INFLECTOR.lowerCamelCase(
                 INFLECTOR.pluralize(ClassUtils.getEntityNameWithoutDto(entityClass))
         );
+    }
+
+    public void failure() {
+        this.put(SUCCESS, false);
     }
 }
