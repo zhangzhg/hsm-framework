@@ -248,7 +248,8 @@ public class ResultData {
         );
     }
 
-    public void failure() {
+    public void failure(String msg) {
+        this.put("msg", msg);
         this.put(SUCCESS, false);
     }
 }
