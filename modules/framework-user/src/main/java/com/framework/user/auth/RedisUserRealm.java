@@ -17,6 +17,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 
 public class RedisUserRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(RedisUserRealm.class);
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Autowired
     ISysUserService sysUserService;
@@ -46,7 +49,11 @@ public class RedisUserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SysUserEntity userInfo = (SysUserEntity) principals.getPrimaryPrincipal();
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        SimpleAuthorizationInfo info = (SimpleAuthorizationInfo) redisTemplate.opsForValue().get(userInfo.getId());
+        if (!ObjectUtils.isEmpty(info)) {
+            return info;
+        }
+        info = new SimpleAuthorizationInfo();
         //1.角色
         List<SysRoleEntity> roleList = sysRoleService.queryRoleByUserId(userInfo.getId());
         List<String> roleCodes = getRoleCodeList(roleList);
@@ -57,6 +64,8 @@ public class RedisUserRealm extends AuthorizingRealm {
             //设置操作权限
             info.addStringPermissions(permissions);
         }
+
+        redisTemplate.opsForValue().set(userInfo.getId(), info);
         return info;
     }
 
