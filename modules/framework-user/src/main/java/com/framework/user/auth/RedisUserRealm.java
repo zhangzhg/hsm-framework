@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 public class RedisUserRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(RedisUserRealm.class);
+    private static final String KEY_AUTH = "authorizationInfo:";
     @Autowired
     RedisTemplate redisTemplate;
 
@@ -49,7 +50,8 @@ public class RedisUserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SysUserEntity userInfo = (SysUserEntity) principals.getPrimaryPrincipal();
-        SimpleAuthorizationInfo info = (SimpleAuthorizationInfo) redisTemplate.opsForValue().get(userInfo.getId());
+        String key = KEY_AUTH + userInfo.getId();
+        SimpleAuthorizationInfo info = (SimpleAuthorizationInfo) redisTemplate.opsForValue().get(key);
         if (!ObjectUtils.isEmpty(info)) {
             return info;
         }
@@ -65,7 +67,7 @@ public class RedisUserRealm extends AuthorizingRealm {
             info.addStringPermissions(permissions);
         }
 
-        redisTemplate.opsForValue().set(userInfo.getId(), info);
+        redisTemplate.opsForValue().set(key, info);
         return info;
     }
 
